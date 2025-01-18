@@ -31,29 +31,49 @@ const registerUser = async (username, email, password, userImage, role) => {
 };
 
 const loginUser = async (email, password) => {
+  console.log(email, password);
+
   const query = "SELECT * FROM users WHERE email=?";
+  console.log(query);
+
   return new Promise((resolve, reject) => {
     db.query(query, [email], async (err, results) => {
       if (err) {
-        reject({ status: 500, message: "Internal Server Error" });
+        return reject({ status: 500, message: "Internal Server Error" });
       }
+
+      console.log(results);
+
+      // Check if no user was found
       if (results.length === 0) {
-        reject({ status: 401, message: "Invalid Email" });
+        return reject({ status: 401, message: "Invalid Email" });
       }
+
       const userData = results[0];
 
-      const isPasswordValid = await bcrypt.compare(password, userData.password);
+      try {
+        // Check if the password is valid
+        const isPasswordValid = await bcrypt.compare(
+          password,
+          userData.password
+        );
 
-      if (!isPasswordValid) {
-        reject({ status: 401, message: "Invalid Password" });
+        if (!isPasswordValid) {
+          return reject({ status: 401, message: "Invalid Password" });
+        }
+
+        // Return the user object on successful login
+        const user = {
+          email,
+          userImage: userData.userImage,
+          username: userData.username,
+          role: userData.role,
+        };
+        resolve({ status: 200, message: "Login successful", user });
+      } catch (bcryptError) {
+        // Handle any errors with bcrypt
+        reject({ status: 500, message: "Error checking password" });
       }
-      const user = {
-        email,
-        userImage: userData.userImage,
-        username: userData.username,
-        role: userData.role,
-      };
-      resolve({ status: 200, message: "Login successful", user });
     });
   });
 };

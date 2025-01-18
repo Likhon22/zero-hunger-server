@@ -14,7 +14,7 @@ const getUserStats = async (req, res) => {
 const getDonorStats = async (req, res) => {
   const email = req.params.email;
   try {
-    const donorStats = await userService.getDonorStats(email);
+    const donorStats = await userServices.getDonorStats(email);
     res.send(donorStats);
   } catch (err) {
     console.log(err);
@@ -24,7 +24,7 @@ const getDonorStats = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await userService.getAllUsers();
+    const users = await userServices.getAllUsers();
     res.send(users);
   } catch (err) {
     console.log(err);
@@ -35,7 +35,7 @@ const getAllUsers = async (req, res) => {
 const getUserByEmail = async (req, res) => {
   const email = req.params.email;
   try {
-    const user = await userService.getUserByEmail(email);
+    const user = await userServices.getUserByEmail(email);
     res.send(user);
   } catch (err) {
     console.log(err);
@@ -46,7 +46,7 @@ const getUserByEmail = async (req, res) => {
 const deleteUserByEmail = async (req, res) => {
   const email = req.params.email;
   try {
-    const result = await userService.deleteUserByEmail(email);
+    const result = await userServices.deleteUserByEmail(email);
     res.send(result);
   } catch (err) {
     console.log(err);
@@ -58,13 +58,24 @@ const updateUserRole = async (req, res) => {
   const email = req.params.email;
   const { role } = req.body;
   try {
-    const result = await userService.updateUserRole(email, role);
+    const result = await userServices.updateUserRole(email, role);
     res.send(result);
   } catch (err) {
     console.log(err);
     res.status(500).send("Error updating user role");
   }
 };
+const getAdminStats = async (req, res) => {
+  try {
+    const data = await userServices.getAdminStats();
+
+    res.status(200).send(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+
 const userControllers = {
   getUserStats,
   getDonorStats,
@@ -72,6 +83,7 @@ const userControllers = {
   getUserByEmail,
   deleteUserByEmail,
   updateUserRole,
+  getAdminStats,
 };
 
 module.exports = userControllers;

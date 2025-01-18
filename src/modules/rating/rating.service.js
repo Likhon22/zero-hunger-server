@@ -54,4 +54,5 @@ const ratingServices = {
   getRatings,
   deleteRating,
 };
+
 module.exports = ratingServices;

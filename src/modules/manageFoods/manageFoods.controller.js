@@ -12,7 +12,7 @@ const createManageFood = async (req, res) => {
 
 const getManageFoodByUser = async (req, res) => {
   try {
-    const results = await manageFoodService.getManageFoodByUser(
+    const results = await manageFoodServices.getManageFoodByUser(
       req.params.email
     );
     res.send(results);
@@ -24,7 +24,7 @@ const getManageFoodByUser = async (req, res) => {
 
 const getManageFoodByDonor = async (req, res) => {
   try {
-    const results = await manageFoodService.getManageFoodByDonor(
+    const results = await manageFoodServices.getManageFoodByDonor(
       req.params.email
     );
     res.send(results);
@@ -36,7 +36,7 @@ const getManageFoodByDonor = async (req, res) => {
 
 const deleteManageFood = async (req, res) => {
   try {
-    const results = await manageFoodService.deleteManageFood(req.params.id);
+    const results = await manageFoodServices.deleteManageFood(req.params.id);
     res.send(results);
   } catch (err) {
     console.log(err);
@@ -46,7 +46,7 @@ const deleteManageFood = async (req, res) => {
 
 const updateManageFoodStatus = async (req, res) => {
   try {
-    const results = await manageFoodService.updateManageFoodStatus(
+    const results = await manageFoodServices.updateManageFoodStatus(
       req.params.id,
       req.body.status
     );
@@ -59,7 +59,7 @@ const updateManageFoodStatus = async (req, res) => {
 
 const updateDeliveryStatus = async (req, res) => {
   try {
-    const results = await manageFoodService.updateDeliveryStatus(
+    const results = await manageFoodServices.updateDeliveryStatus(
       req.params.id,
       req.body.status
     );

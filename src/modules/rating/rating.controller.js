@@ -1,5 +1,4 @@
 const ratingServices = require("./rating.service");
-
 const addRating = async (req, res) => {
   const { suggestion, feedback, name, email, userImage, ratingValue, date } =
     req.body;
@@ -23,7 +22,7 @@ const addRating = async (req, res) => {
 
 const getRatings = async (req, res) => {
   try {
-    const ratings = await ratingService.getRatings();
+    const ratings = await ratingServices.getRatings();
     res.status(200).send(ratings);
   } catch (err) {
     console.log(err);
@@ -35,7 +34,7 @@ const deleteRating = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await ratingService.deleteRating(id);
+    await ratingServices.deleteRating(id);
     res.status(200).send({ message: "Rating deleted successfully" });
   } catch (err) {
     console.log(err);

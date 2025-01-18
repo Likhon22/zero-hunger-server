@@ -16,7 +16,7 @@ const moduleRoutes = [
     routes: foodsRoutes,
   },
   {
-    path: "/manage-foods",
+    path: "/manage-food",
     routes: manageFoodRoutes,
   },
   {

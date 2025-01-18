@@ -97,6 +97,39 @@ const updateUserRole = async (email, role) => {
     });
   });
 };
+const getAdminStats = async () => {
+  const userQuery = `
+    SELECT 
+      (SELECT COUNT(DISTINCT recipientEmail) FROM manage_food) AS uniqueRecipients,
+      (SELECT COUNT(DISTINCT email) FROM foods) AS uniqueDonor,
+      (SELECT SUM(quantity) FROM foods) AS totalQuantity,
+      (SELECT COUNT(*) FROM foods) AS totalFood,
+      (SELECT COUNT(*) FROM foods WHERE status = "delivered") AS totalDelivered;
+  `;
+
+  const query = `
+    SELECT t1.email, t1.totalQuantity, t2.avg_expire_date 
+    FROM 
+      (SELECT email, SUM(quantity) AS totalQuantity FROM foods GROUP BY email) AS t1
+    JOIN 
+      (SELECT email, ROUND(AVG(expire_date), 2) AS avg_expire_date FROM foods GROUP BY email) AS t2
+    ON t1.email = t2.email;
+  `;
+
+  return new Promise((resolve, reject) => {
+    db.query(query, (err, results) => {
+      if (err) {
+        return reject(err);
+      }
+      db.query(userQuery, (err, userResults) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve({ results, userResults: userResults[0] });
+      });
+    });
+  });
+};
 const userServices = {
   getUserStats,
   getDonorStats,
@@ -104,5 +137,6 @@ const userServices = {
   getUserByEmail,
   deleteUserByEmail,
   updateUserRole,
+  getAdminStats,
 };
 module.exports = userServices;
